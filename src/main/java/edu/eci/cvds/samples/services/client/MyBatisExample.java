@@ -28,6 +28,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
+import edu.eci.cvds.sampleprj.dao.ClienteDAO;
+import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper;
@@ -75,22 +77,26 @@ public class MyBatisExample {
             TipoItemMapper tipoItemMapper = sqlss.getMapper(TipoItemMapper.class);
             
             //Pruebas Mapper Usuario OK
-            //System.out.println(clienteMapper.consultarClientes()); //Bill Clinton
-            //System.out.println(clienteMapper.consultarCliente(98347)); //Bill Clinton
+            System.out.println(clienteMapper.consultarClientes()); //Bill Clinton
+            System.out.println(clienteMapper.consultarCliente(98347)); //Bill Clinton
 
             //Pruebas Mapper Item OK
             //System.out.println(itemMapper.consultarItem(2));
             //System.out.println(itemMapper.consultarItems());
 
             //Insertar tipo item NO Ok
-            tipoItemMapper.addTipoItem("Jorgito Guayaco");
-            TipoItem tipo = tipoItemMapper.getTipoItem(1);
-            itemMapper.insertarItem(new Item(tipo, 2143369, "Jorgito", "Jorgito el guayaco", new Date(), 50000, "formatoRenta", "undefined"));
-            clienteMapper.agregarItemRentadoACliente(98347, 2143369, new Date(), new Date());
-            sqlss.commit();
+            //tipoItemMapper.addTipoItem("Jorgito Guayaco");
+            //TipoItem tipo = tipoItemMapper.getTipoItem(1);
+            //itemMapper.insertarItem(new Item(tipo, 2143369, "Jorgito", "Jorgito el guayaco", new Date(), 50000, "formatoRenta", "undefined"));
+            //clienteMapper.agregarItemRentadoACliente(98347, 2143369, new Date(), new Date());
+            //sqlss.commit();
             sqlss.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}
+
+    public void ConsultarCliente(int id){
+
+    }
+¡
