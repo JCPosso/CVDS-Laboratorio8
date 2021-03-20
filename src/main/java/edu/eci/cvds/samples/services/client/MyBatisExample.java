@@ -99,4 +99,4 @@ public class MyBatisExample {
     public void ConsultarCliente(int id){
 
     }
-¡
+}

@@ -5,7 +5,7 @@ import edu.eci.cvds.sampleprj.dao.ClienteDAO;
 import edu.eci.cvds.sampleprj.dao.ItemDAO;
 import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISItemDao;
+import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISItemDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISTipoItemDAO;
 import edu.eci.cvds.samples.services.impl.ServiciosAlquilerItemsImpl;
 import org.apache.ibatis.transaction.TransactionFactory;
