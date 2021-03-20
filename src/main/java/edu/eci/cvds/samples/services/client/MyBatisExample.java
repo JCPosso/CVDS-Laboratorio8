@@ -95,8 +95,4 @@ public class MyBatisExample {
             e.printStackTrace();
         }
     }
-
-    public void ConsultarCliente(int id){
-
-    }
 }

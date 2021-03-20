@@ -5,7 +5,7 @@ import com.google.inject.Singleton;
 import edu.eci.cvds.sampleprj.dao.ClienteDAO;
 import edu.eci.cvds.sampleprj.dao.ItemDAO;
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
-
+import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
 import edu.eci.cvds.samples.entities.Cliente;
 import edu.eci.cvds.samples.entities.Item;
 import edu.eci.cvds.samples.entities.ItemRentado;
@@ -21,6 +21,9 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
    @Inject
    private ItemDAO itemDAO;
 
+   @Inject
+   private ClienteDAO ClienteDAO;
+
    @Override
    public int valorMultaRetrasoxDia(int itemId) {
        throw new UnsupportedOperationException("Not supported yet.");
@@ -28,7 +31,14 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
    @Override
    public Cliente consultarCliente(long docu) throws ExcepcionServiciosAlquiler {
-       throw new UnsupportedOperationException("Not supported yet.");
+       Cliente cliente = null;
+       try {
+           cliente = ClienteDAO.load(docu);
+       } catch (Exception e) {
+           throw new ExcepcionServiciosAlquiler("Ha ocudrrido un error buscando al cliente");
+       }
+       
+       return cliente;
    }
 
    @Override
