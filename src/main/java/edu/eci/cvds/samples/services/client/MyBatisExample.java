@@ -78,7 +78,7 @@ public class MyBatisExample {
             
             //Pruebas Mapper Usuario OK
             System.out.println(clienteMapper.consultarClientes()); //Bill Clinton
-            System.out.println(clienteMapper.consultarCliente(98347)); //Bill Clinton
+            System.out.println(clienteMapper.consultarClienteById(98347)); //Bill Clinton
 
             //Pruebas Mapper Item OK
             //System.out.println(itemMapper.consultarItem(2));

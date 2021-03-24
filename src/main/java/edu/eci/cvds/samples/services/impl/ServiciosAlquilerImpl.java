@@ -13,6 +13,7 @@ import edu.eci.cvds.samples.entities.TipoItem;
 import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
@@ -43,12 +44,28 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
    @Override
    public List<ItemRentado> consultarItemsCliente(long idcliente) throws ExcepcionServiciosAlquiler {
-       throw new UnsupportedOperationException("Not supported yet.");
+       List<ItemRentado> items = new ArrayList<ItemRentado>();
+       try {
+           items = ClienteDAO.consultarItems(idcliente);
+           if(items.size() <=0)
+               System.out.println("El Cliente no tiene items rentados");
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+
+       return items;
    }
 
    @Override
    public List<Cliente> consultarClientes() throws ExcepcionServiciosAlquiler {
-       throw new UnsupportedOperationException("Not supported yet.");
+       List<Cliente> clientes = new ArrayList<Cliente>();
+       try {
+           clientes = ClienteDAO.loadClientes();
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return clientes;
    }
 
    @Override
