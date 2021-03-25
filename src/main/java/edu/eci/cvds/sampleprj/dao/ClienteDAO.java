@@ -11,6 +11,7 @@ public interface ClienteDAO {
 
     public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws PersistenceException;
     public void registrarCliente(Cliente c) throws PersistenceException;
+    public void vetarCliente(long docu, boolean estado) throws PersistenceException;
 
     public Cliente load(long id) throws PersistenceException, edu.eci.cvds.sampleprj.dao.PersistenceException;
 

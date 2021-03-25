@@ -53,8 +53,11 @@ public class MyBATISItemDAO implements ItemDAO {
     @Override
     public long consultarMultaAlquiler(int iditem,Date fechaDevolucion) throws PersistenceException{
         long multa=0;
+        Date today = new Date();
+        int todayDay = today.getDay();
+        int diasRetraso = todayDay - fechaDevolucion.getDay();
         try {
-            multa = itemMapper.consultarMultaAlquiler(iditem,fechaDevolucion);
+            multa = itemMapper.consultarMultaAlquiler(iditem,fechaDevolucion, diasRetraso);
         } catch (org.apache.ibatis.exceptions.PersistenceException e) {
             throw new PersistenceException("Error al consultar el item ", e);
         }
@@ -70,5 +73,25 @@ public class MyBATISItemDAO implements ItemDAO {
             throw new PersistenceException("No se pudo consultar el costo del alquiler", e);
         }
         return costo;
+    }
+
+    @Override
+    public void actualizarTarifaItem(int id, long tarifa) throws PersistenceException {
+        try {
+            itemMapper.actualizarTarifaItem(id,tarifa);
+        } catch (Exception e) {
+            throw new PersistenceException("No se pudo actualizar la tarifa del item", e);
+        }
+    }
+
+    @Override
+    public int valorMultaRetrasoxDia(int id) throws PersistenceException {
+        int valor = -1;
+        try {
+            valor = itemMapper.valorMultaRetrasoxDia(id);
+        } catch (Exception e) {
+            throw new PersistenceException("No se pudo obtener el valor de la multa", e);
+        }
+        return valor;
     }
 }

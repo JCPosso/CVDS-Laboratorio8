@@ -15,13 +15,15 @@ import edu.eci.cvds.samples.entities.TipoItem;
 public interface ItemMapper {
     
     public void insertarItem(@Param("item") Item it);
+    public void actualizarTarifaItem(@Param("id") int id, @Param("tarifa") long tarifa);
     
     public List<Item> consultarItems();  
     public List<Item> consultarDisponibles();         
     public List<TipoItem> consultarTipoItems();
 
     public Item consultarItem(@Param("id") int id);
-    public long consultarMultaAlquiler(@Param("iditem") long id, @Param("fechaDevolucion") Date fecha);
+    public long consultarMultaAlquiler(@Param("iditem") long id, @Param("fechaDevolucion") Date fecha, @Param("dias") int dias);
     public long consultarCostoAlquiler(@Param("iditem") long id, @Param("numdias") int numdias);
+    public int valorMultaRetrasoxDia(@Param("id") int id);
         
 }

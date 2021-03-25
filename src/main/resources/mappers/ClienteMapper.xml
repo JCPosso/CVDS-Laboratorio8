@@ -85,4 +85,8 @@
       )
     </insert>
 
+    <update parameterMap="map" id="vetarCliente">
+      update VI_CLIENTES set vetado = #{estado} where documento = #{docu}
+    </update>
+
   </mapper>

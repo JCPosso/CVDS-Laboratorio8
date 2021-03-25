@@ -59,10 +59,19 @@
   </select>
 
   <select parameterType="map" id="consultarMultaAlquiler" resultMap="ItemResult">
-    
+    select tarifaxdia * #{dias} from VI_ITEMS where id = #{id}
   </select>    
 
   <select parameterType="map" id="consultarCostoAlquiler" resultMap="ItemResult">
     select tarifaxdia * #{numdias} from VI_ITEMS where id = #{iditem}
   </select>
+
+  <update parameterType="map" id="actualizarTarifaItem">
+    update VI_ITEMS set tarifaxdia = #{tarifa} where id = #{id}
+  </update>
+
+  <select parameterMap="map" id="valorMultaRetrasoxDia" resultMap="ItemResult">
+    select tarfiaxdia from VI_ITEMS where id = #{id}
+  </select>
+
 </mapper>

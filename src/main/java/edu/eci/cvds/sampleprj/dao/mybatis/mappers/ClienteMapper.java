@@ -47,4 +47,6 @@ public interface ClienteMapper {
     );    
 
     public void registrarCliente(@Param("cliente") Cliente c);
+
+    public void vetarCliente(@Param("docu")long docu, @Param("estado")boolean estado);
 }

@@ -32,7 +32,13 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
    @Override
    public int valorMultaRetrasoxDia(int itemId) {
-       throw new UnsupportedOperationException("Not supported yet.");
+       int valor = -1;
+      try {
+          valor = itemDAO.valorMultaRetrasoxDia(itemId);
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return valor;
    }
 
    @Override
@@ -164,7 +170,11 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
    @Override
    public void actualizarTarifaItem(int id, long tarifa) throws ExcepcionServiciosAlquiler {
-       throw new UnsupportedOperationException("Not supported yet.");
+       try {
+           itemDAO.actualizarTarifaItem(id, tarifa);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
    }
 
    @Override
@@ -178,6 +188,10 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
    @Override
    public void vetarCliente(long docu, boolean estado) throws ExcepcionServiciosAlquiler {
-       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       try {
+           ClienteDAO.vetarCliente(docu, estado);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
    }
 }

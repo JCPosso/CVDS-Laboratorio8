@@ -83,5 +83,14 @@ public class MyBATISClienteDAO implements ClienteDAO{
         calendar.add(Calendar.DAY_OF_YEAR, dias);
         return calendar.getTime(); 
     }
+
+    @Override
+    public void vetarCliente(long docu, boolean estado) throws PersistenceException {
+        try {
+            clienteMapper.vetarCliente(docu, estado);
+        } catch (Exception e) {
+            throw new PersistenceException("No se pudo vetar al cliente", e);
+        }
+    }
 }
 
