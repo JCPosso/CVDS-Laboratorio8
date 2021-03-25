@@ -36,6 +36,7 @@
   <select parameterType="map" id="consultarItems" resultMap="ItemResult">
     select * from VI_ITEMS
   </select>
+
   <select parameterType="map" id="consultarItemsDisponibles" resultMap="ItemResult">
     select 
       ir.id,
@@ -56,5 +57,12 @@
             ON i.id = ir.ITEMS_id 
             WHERE SYSDATE() >  ir.fechafinrenta ;
   </select>
+
+  <select parameterType="map" id="consultarMultaAlquiler" resultMap="ItemResult">
     
+  </select>    
+
+  <select parameterType="map" id="consultarCostoAlquiler" resultMap="ItemResult">
+    select tarifaxdia * #{numdias} from VI_ITEMS where id = #{iditem}
+  </select>
 </mapper>

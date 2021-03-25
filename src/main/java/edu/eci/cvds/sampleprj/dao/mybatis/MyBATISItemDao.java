@@ -61,5 +61,14 @@ public class MyBATISItemDAO implements ItemDAO {
         return multa;
     }
 
-
+    @Override
+    public long consultarCostoAlquiler(int iditem, int numdias) throws PersistenceException {
+        long costo = -1;
+        try {
+            costo = itemMapper.consultarCostoAlquiler(iditem, numdias);
+        } catch (Exception e) {
+            throw new PersistenceException("No se pudo consultar el costo del alquiler", e);
+        }
+        return costo;
+    }
 }

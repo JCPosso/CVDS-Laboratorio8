@@ -17,5 +17,15 @@
   <select parameterType="map" id="getTipoItem" resultMap="TipoItemResult">
     select * from VI_TIPOITEM where id = #{id}
   </select>
+
+  <select parameterType="map" id="consultarTipoItem" resultMap="TipoItemResult">
+    select * VI_TIPOITEM.id
+    join VI_ITEM on VI_TIPOITEM.id = VI_ITEM.TIPOITEM_id
+    where VI_ITEM = #{id}
+  </select>
+
+  <select parameterType="map" id="consultarTipoItems" resultMap="TipoItemResult">
+    select * from VI_TIPOITEM
+  </select>
                 
 </mapper>

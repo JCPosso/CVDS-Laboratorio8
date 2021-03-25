@@ -64,4 +64,25 @@
       )
     </insert>
 
+    <insert parameterType="map" id="registrarAlquilerCliente">
+      insert into VI_ITEMRENTADO(CLIENTES_documento, ITEMS_id, fechainiciorenta, fechafinrenta) values(
+        #{docu},
+        #{item},
+        #{date},
+        #{fechaFinal}
+      )
+    </insert>
+
+    <insert parameterType="map" id="registrarCliente">
+      insert into VI_CLIENTES values(
+        #{cliente.documento},
+        #{cliente.nombre},
+        #{cliente.telefono},
+        #{cliente.direccion},
+        #{cliente.email},
+        #{cliente.vetado},
+        #{cliente.rentados}
+      )
+    </insert>
+
   </mapper>

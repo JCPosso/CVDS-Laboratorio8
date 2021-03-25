@@ -38,5 +38,13 @@ public interface ClienteMapper {
     public List<Cliente> consultarClientes();
 
     public List<ItemRentado> consultarItems(@Param("id") long id);
-    
+
+    public void registrarAlquilerCliente(
+        @Param("date")Date date, 
+        @Param("docu")long docu, 
+        @Param("item")Item item, 
+        @Param("numdias")int numdias
+    );    
+
+    public void registrarCliente(@Param("cliente") Cliente c);
 }

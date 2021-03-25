@@ -1,6 +1,8 @@
 package edu.eci.cvds.sampleprj.dao.mybatis;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -50,6 +52,36 @@ public class MyBATISClienteDAO implements ClienteDAO{
         }
 
         return itemRentados;
+    }
+
+    @Override
+    public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws PersistenceException {
+        Date fechaFinal = sumarDiasAFecha(date, numdias);
+        try {
+            clienteMapper.registrarAlquilerCliente(date, docu, item, numdias);
+        } catch (Exception e) {
+            throw new PersistenceException("No se pudo registrar el cliente", e);
+        }
+        
+    }
+
+    @Override
+    public void registrarCliente(Cliente c) throws PersistenceException {
+        try {
+            clienteMapper.registrarCliente(c);
+        } catch (Exception e) {
+            throw new PersistenceException("No se pudo registrar el cliente", e);
+        }
+        
+    }
+
+    //Auxiliar
+    private Date sumarDiasAFecha(Date fecha, int dias){
+        if (dias==0) return fecha;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha); 
+        calendar.add(Calendar.DAY_OF_YEAR, dias);
+        return calendar.getTime(); 
     }
 }
 
