@@ -78,13 +78,23 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
    }
 
    @Override
-   public List<Item> consultarItemsDisponibles() {
-       throw new UnsupportedOperationException("Not supported yet.");
+   public List<Item> consultarItemsDisponibles() throws ExcepcionServiciosAlquiler {
+        List<Item> disponibles = new ArrayList<Item>();
+        try{
+            disponibles= itemDAO.itemsDisponibles();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return disponibles;
    }
 
    @Override
    public long consultarMultaAlquiler(int iditem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
-       throw new UnsupportedOperationException("Not supported yet.");
+       try {
+           return itemDAO.consultarMultaAlquiler(iditem,fechaDevolucion);
+       } catch (Exception e) {
+           throw new UnsupportedOperationException("Not supported yet.");
+       }
    }
 
    @Override

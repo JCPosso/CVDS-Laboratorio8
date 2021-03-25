@@ -36,5 +36,25 @@
   <select parameterType="map" id="consultarItems" resultMap="ItemResult">
     select * from VI_ITEMS
   </select>
+  <select parameterType="map" id="consultarItemsDisponibles" resultMap="ItemResult">
+    select 
+      ir.id,
+      ir.CLIENTES_documento,
+      ir.ITEMS_ID,
+      ir.fechainiciorenta,
+      ir.fechafinrenta,
+      i.id,
+      i.nombre,
+      i.descirpcion,
+      i.fechalanzamiento,
+      i.tarifaxdia,
+      i.formatorenta,
+      i.genero
+      FROM 
+      from VI_ITEMS AS i
+            JOIN  VI_ITEMRENTADO  AS ir 
+            ON i.id = ir.ITEMS_id 
+            WHERE SYSDATE() >  ir.fechafinrenta ;
+  </select>
     
 </mapper>

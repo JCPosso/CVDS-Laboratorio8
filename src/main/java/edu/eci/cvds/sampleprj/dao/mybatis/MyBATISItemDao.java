@@ -1,5 +1,9 @@
 package edu.eci.cvds.sampleprj.dao.mybatis;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.eci.cvds.sampleprj.dao.ItemDAO;
@@ -34,5 +38,28 @@ public class MyBATISItemDAO implements ItemDAO {
         }
 
     }
+
+    @Override
+    public List<Item> itemsDisponibles() throws PersistenceException {
+        List<Item> itemRentados = new ArrayList<Item>();
+        try {
+            itemRentados = itemMapper.consultarDisponibles();
+        } catch (org.apache.ibatis.exceptions.PersistenceException e) {
+            throw new PersistenceException("Ocurrio un error consultando items", e);
+        }
+        return itemRentados;
+    }
+
+    @Override
+    public long consultarMultaAlquiler(int iditem,Date fechaDevolucion) throws PersistenceException{
+        long multa=0;
+        try {
+            multa = itemMapper.consultarMultaAlquiler(iditem,fechaDevolucion);
+        } catch (org.apache.ibatis.exceptions.PersistenceException e) {
+            throw new PersistenceException("Error al consultar el item ", e);
+        }
+        return multa;
+    }
+
 
 }

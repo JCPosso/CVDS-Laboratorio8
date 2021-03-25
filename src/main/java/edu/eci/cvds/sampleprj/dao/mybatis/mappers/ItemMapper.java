@@ -14,11 +14,11 @@ import edu.eci.cvds.samples.entities.Item;
 public interface ItemMapper {
     
     
-    public List<Item> consultarItems();        
-    
+    public List<Item> consultarItems();  
+    public List<Item> consultarDisponibles();         
     public Item consultarItem(@Param("id") int id);
-    
     public void insertarItem(@Param("item") Item it);
+    public long consultarMultaAlquiler(@Param("iditem") long id, @Param("fechaDevolucion") Date fecha);
 
         
 }
