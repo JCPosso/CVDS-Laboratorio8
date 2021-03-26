@@ -7,6 +7,9 @@ import java.util.Date;
 import edu.eci.cvds.sampleprj.dao.ItemDAO;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.mybatis.guice.transactional.Transactional;
+
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
 import edu.eci.cvds.samples.entities.Item;
@@ -50,11 +53,15 @@ public class MyBATISItemDAO implements ItemDAO {
     }
 
     @Override
+    @Transactional
     public long consultarMultaAlquiler(int iditem,Date fechaDevolucion) throws PersistenceException{
         long multa=0;
         Date today = new Date();
         int todayDay = today.getDay();
         int diasRetraso = todayDay - fechaDevolucion.getDay();
+
+        System.out.println(diasRetraso);
+        
         try {
             multa = itemMapper.consultarMultaAlquiler(iditem,fechaDevolucion, diasRetraso);
         } catch (org.apache.ibatis.exceptions.PersistenceException e) {

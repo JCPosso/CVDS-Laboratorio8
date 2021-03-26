@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.google.inject.Inject;
 
+import org.mybatis.guice.transactional.Transactional;
+
 import edu.eci.cvds.sampleprj.dao.ClienteDAO;
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
@@ -55,6 +57,7 @@ public class MyBATISClienteDAO implements ClienteDAO{
     }
 
     @Override
+    @Transactional
     public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws PersistenceException {
         Date fechaFinal = sumarDiasAFecha(date, numdias);
         try {
@@ -66,6 +69,7 @@ public class MyBATISClienteDAO implements ClienteDAO{
     }
 
     @Override
+    @Transactional
     public void registrarCliente(Cliente c) throws PersistenceException {
         try {
             clienteMapper.registrarCliente(c);
@@ -85,6 +89,7 @@ public class MyBATISClienteDAO implements ClienteDAO{
     }
 
     @Override
+    @Transactional
     public void vetarCliente(long docu, boolean estado) throws PersistenceException {
         try {
             clienteMapper.vetarCliente(docu, estado);

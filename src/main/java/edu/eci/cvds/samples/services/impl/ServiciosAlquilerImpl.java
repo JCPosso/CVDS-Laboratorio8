@@ -103,10 +103,9 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
    public long consultarMultaAlquiler(int iditem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
        long multa = -1;
        try {
-           //Implementar consulta SQL
            multa = itemDAO.consultarMultaAlquiler(iditem,fechaDevolucion);
        } catch (Exception e) {
-           throw new UnsupportedOperationException("Not supported yet.");
+           e.printStackTrace();
        }
        return multa;
    }
