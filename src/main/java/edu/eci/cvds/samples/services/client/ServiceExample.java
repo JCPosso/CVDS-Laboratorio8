@@ -9,7 +9,6 @@ public class ServiceExample {
 
     }
 
-
     private static void ConsultarCliente(){
         try {
             System.out.println(ServiciosAlquilerFactory.getInstance().getServiciosAlquiler().consultarCliente(1));
