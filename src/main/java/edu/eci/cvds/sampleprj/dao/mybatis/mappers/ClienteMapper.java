@@ -16,7 +16,7 @@ public interface ClienteMapper {
     
     public Cliente consultarClienteById(@Param("idcli") int id); 
     
-    public Cliente consultarClienteBydoc(@Param("doc") long doc);
+    public Cliente consultarClienteBydoc(@Param("doc") long documento);
     
     /**
      * Registrar un nuevo item rentado asociado al cliente identificado

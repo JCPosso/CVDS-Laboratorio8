@@ -25,7 +25,6 @@ public class ServiciosAlquilerTest {
     ArrayList<ItemRentado> rentadonull = new ArrayList<>(); 
 
     ServiciosAlquiler serviciosAlquiler = ServiciosAlquilerFactory.getInstance().getServiciosAlquilerTesting();
-    Cliente cliente = new Cliente("eljohann",10045342L,"31243243","cll23#43-12","eljohangu@algo.com",false,rentadonull);
     
     TipoItem tipoitem = new TipoItem(12000, "Juguete");
     Item item = new Item(tipoitem, 12001, "Rubick", "Pentamix QiYi", fecha, 12000L, "formatoRenta","genero");
@@ -33,44 +32,32 @@ public class ServiciosAlquilerTest {
     @Before
     public void setUp() {
     }
-
+    
     @Test
-    public void emptyDB() throws ExcepcionServiciosAlquiler {
+    public void emptyDB() {
         for(int i = 0; i < 100; i += 10) {
             boolean r = false;
-            serviciosAlquiler.consultarCliente(1);
             try {
+                serviciosAlquiler.consultarCliente(i);
+            } catch(ExcepcionServiciosAlquiler e) {
+                r = true;
             } catch(IndexOutOfBoundsException e) {
                 r = true;
             }
             // Validate no Client was found;
             Assert.assertTrue(r);
-        };
-    }
-
-    @Test
-    public void deberia_VetarCliente() throws ExcepcionServiciosAlquiler {
-        try {
-               serviciosAlquiler.registrarCliente(cliente);
-               serviciosAlquiler.vetarCliente(10045342, true);
-               boolean esVetado = serviciosAlquiler.consultarCliente(10045342).isVetado();
-               Assert.assertEquals(esVetado,true);        
-        } catch (Exception e) {
-                Assert.fail();
         }
-    }
-
+    };
     @Test
-    public void deberia_registrarItem() throws ExcepcionServiciosAlquiler{
+    public void deberia_consultarItemsCliente() throws ExcepcionServiciosAlquiler {
         try {
-            serviciosAlquiler.registrarItem(item);  
-            serviciosAlquiler.consultarItem(12000);
+            serviciosAlquiler.consultarItemsCliente(10);
             Assert.assertTrue(true);         
         } catch (Exception e) {
             Assert.fail();
-        }       
+        }        
     }
-
+    
     @Test
     public void deberia_consultarItemsDisponibles() throws ExcepcionServiciosAlquiler {
         try {
@@ -81,7 +68,6 @@ public class ServiciosAlquilerTest {
         }        
     }
 
-
     @Test
     public void deberia_consultarMultaAlquiler() throws ExcepcionServiciosAlquiler {
         try {
@@ -91,10 +77,55 @@ public class ServiciosAlquilerTest {
             Assert.assertEquals(multa,1);         
         } catch (ExcepcionServiciosAlquiler e) {
             Assert.fail();
-        }        
+        }  
     }
-       //Auxiliar
-       private Date sumarDiasAFecha(Date fecha, int dias){
+
+    @Test
+    public void deberia_RegistrarCliente() throws ExcepcionServiciosAlquiler{     
+        Cliente cliente = new Cliente("eljohann2",1234567L,"31232342234","cll23#3-12","eljohangu@algo.com",false,rentadonull);         
+        try{
+            serviciosAlquiler.registrarCliente( cliente);
+            Assert.assertTrue(true);
+        }catch (ExcepcionServiciosAlquiler ex){
+            Assert.fail();
+        }
+    }
+    
+    @Test
+    public void deberia_consultarCostoAlquiler() throws ExcepcionServiciosAlquiler {
+        try {
+            long multa = serviciosAlquiler.consultarCostoAlquiler(10, 12);
+            Assert.assertEquals(multa,1);         
+        } catch (ExcepcionServiciosAlquiler e) {
+            Assert.fail();
+        }  
+    } 
+    
+    @Test
+    public void deberia_registrarItem() throws ExcepcionServiciosAlquiler{
+        try {
+            serviciosAlquiler.registrarItem(item);  
+            serviciosAlquiler.consultarItem(12000);
+            Assert.assertTrue(true);         
+        } catch (Exception e) {
+            Assert.fail();
+        }       
+    }
+    @Test
+    public void deberia_VetarCliente() throws ExcepcionServiciosAlquiler {
+        Cliente cliente = new Cliente("eljohann1",10041232L,"3124324312","cll23#43-12","eljohangu@algo.com",false,rentadonull);
+        try {
+               serviciosAlquiler.registrarCliente(cliente);
+               serviciosAlquiler.vetarCliente(10045342, true);
+               boolean esVetado = serviciosAlquiler.consultarCliente(10045342).isVetado();
+               Assert.assertEquals(esVetado,true);        
+        } catch (Exception e) {
+                Assert.fail();
+        }
+    }
+
+    //Auxiliar
+    private Date sumarDiasAFecha(Date fecha, int dias){
         if (dias==0) return fecha;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha); 
