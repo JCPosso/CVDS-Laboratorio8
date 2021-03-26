@@ -3,7 +3,6 @@ import java.util.Date;
 import java.util.List;
 
 import edu.eci.cvds.samples.entities.Item;
-import edu.eci.cvds.samples.entities.TipoItem;
 
 public interface ItemDAO {
 
