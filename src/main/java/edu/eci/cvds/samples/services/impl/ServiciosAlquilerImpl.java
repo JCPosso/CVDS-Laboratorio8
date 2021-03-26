@@ -28,7 +28,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
    private ClienteDAO ClienteDAO;
 
    @Inject
-   private TipoItemDAO tipoItemDao;
+   private TipoItemDAO tipoItemDAO;
 
    @Override
    public int valorMultaRetrasoxDia(int itemId) {
@@ -115,7 +115,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
    public TipoItem consultarTipoItem(int id) throws ExcepcionServiciosAlquiler {
        TipoItem tipoItem = null;
        try {
-           tipoItem = tipoItemDao.consultarTipoItem(id);
+           tipoItem = tipoItemDAO.consultarTipoItem(id);
        } catch (Exception e) {
            e.printStackTrace();
        }
@@ -127,7 +127,7 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
    public List<TipoItem> consultarTiposItem() throws ExcepcionServiciosAlquiler {
        List<TipoItem> tipoItems = new ArrayList<TipoItem>();
        try {
-           tipoItems = tipoItemDao.consultarTipoItems();
+           tipoItems = tipoItemDAO.consultarTiposItems();
            if(tipoItems.size() <=0)
                System.out.println("La lista esta vacia");
            

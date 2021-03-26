@@ -3,14 +3,16 @@ package edu.eci.cvds.sampleprj.dao.mybatis;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.inject.Inject;
+
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper;
 import edu.eci.cvds.samples.entities.TipoItem;
 
 public class MyBATISTipoItemDAO implements TipoItemDAO{
-
+    
+    @Inject
     private TipoItemMapper tipoItemMapper;
 
 
@@ -27,7 +29,7 @@ public class MyBATISTipoItemDAO implements TipoItemDAO{
     }
    
     @Override
-    public List<TipoItem> consultarTipoItems() throws PersistenceException{
+    public List<TipoItem> consultarTiposItems() throws PersistenceException{
         List<TipoItem> tipoItems = new ArrayList<TipoItem>();
         try {
             tipoItems = tipoItemMapper.consultarTipoItems();
