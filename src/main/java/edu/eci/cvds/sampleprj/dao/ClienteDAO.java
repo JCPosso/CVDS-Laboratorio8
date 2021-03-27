@@ -1,20 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.eci.cvds.sampleprj.dao;
 
+import edu.eci.cvds.samples.entities.Cliente;
 import java.util.Date;
 import java.util.List;
 
-import edu.eci.cvds.samples.entities.Cliente;
-import edu.eci.cvds.samples.entities.Item;
-import edu.eci.cvds.samples.entities.ItemRentado;
-
+/**
+ *
+ * @author andres.gonzalez-ca
+ */
 public interface ClienteDAO {
+    
+    public void save(Cliente cl) throws PersistenceException;
 
-    public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws PersistenceException;
-    public void registrarCliente(Cliente c) throws PersistenceException;
-    public void vetarCliente(long docu, boolean estado) throws PersistenceException;
-
-    public Cliente load(long id) throws PersistenceException, edu.eci.cvds.sampleprj.dao.PersistenceException;
-
-    public List<Cliente> loadClientes() throws PersistenceException;
-    public List<ItemRentado> consultarItems(long id) throws PersistenceException;
+    public Cliente load(int doc) throws PersistenceException;
+    
+    public List<Cliente> consultarClientes() throws PersistenceException;
+    
+     public void agregarItemRentadoACliente(long id, 
+            int idit, 
+            Date fechainicio,
+            Date fechafin)throws PersistenceException;
+    
 }

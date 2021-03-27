@@ -4,10 +4,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import edu.eci.cvds.sampleprj.dao.ClienteDAO;
 import edu.eci.cvds.sampleprj.dao.ItemDAO;
+import edu.eci.cvds.sampleprj.dao.ItemRentadoDAO;
 import edu.eci.cvds.sampleprj.dao.PersistenceException;
 import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
+
 import edu.eci.cvds.samples.entities.Cliente;
 import edu.eci.cvds.samples.entities.Item;
 import edu.eci.cvds.samples.entities.ItemRentado;
@@ -15,7 +15,8 @@ import edu.eci.cvds.samples.entities.TipoItem;
 import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 import java.sql.Date;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Singleton
@@ -23,60 +24,43 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
 
    @Inject
    private ItemDAO itemDAO;
-
    @Inject
-   private ClienteDAO ClienteDAO;
-
+   private ClienteDAO clienteDAO;
    @Inject
    private TipoItemDAO tipoItemDAO;
-
+   @Inject
+   private ItemRentadoDAO itemRentadoDAO;
+   private static final int MULTA_DIARIA=5000;
    @Override
    public int valorMultaRetrasoxDia(int itemId) {
-       int valor = -1;
-      try {
-          valor = itemDAO.valorMultaRetrasoxDia(itemId);
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
-      return valor;
+       throw new UnsupportedOperationException("Not supported yet.");
    }
 
    @Override
    public Cliente consultarCliente(long docu) throws ExcepcionServiciosAlquiler {
-       Cliente cliente = null;
        try {
-           cliente = ClienteDAO.load(docu);
-       } catch (Exception e) {
-           throw new ExcepcionServiciosAlquiler("Ha ocudrrido un error buscando al cliente");
+           return clienteDAO.load((int)docu);
+       } catch (PersistenceException ex) {
+           throw new ExcepcionServiciosAlquiler("Error al consultar el cliente "+docu,ex);
        }
-       
-       return cliente;
    }
 
    @Override
    public List<ItemRentado> consultarItemsCliente(long idcliente) throws ExcepcionServiciosAlquiler {
-       List<ItemRentado> items = new ArrayList<ItemRentado>();
-       try {
-           items = ClienteDAO.consultarItems(idcliente);
-           if(items.size() <=0)
-               System.out.println("El Cliente no tiene items rentados");
-
-       } catch (Exception e) {
-           e.printStackTrace();
+       try{
+           return itemRentadoDAO.consultarItemsCliente(idcliente);
+       }catch (PersistenceException ex){
+           throw new ExcepcionServiciosAlquiler("Error al consultar los items rentados del cliente "+idcliente,ex);
        }
-
-       return items;
    }
 
    @Override
    public List<Cliente> consultarClientes() throws ExcepcionServiciosAlquiler {
-       List<Cliente> clientes = new ArrayList<Cliente>();
        try {
-           clientes = ClienteDAO.loadClientes();
-       } catch (Exception e) {
-           e.printStackTrace();
+           return clienteDAO.consultarClientes();
+       } catch (PersistenceException ex) {
+           throw new ExcepcionServiciosAlquiler("Error al consultar los clientes ",ex);
        }
-       return clientes;
    }
 
    @Override
@@ -84,114 +68,108 @@ public class ServiciosAlquilerImpl implements ServiciosAlquiler {
        try {
            return itemDAO.load(id);
        } catch (PersistenceException ex) {
-           throw new ExcepcionServiciosAlquiler("Error al consultar el item "+id, ex);
+           throw new ExcepcionServiciosAlquiler("Error al consultar el item "+id,ex);
        }
    }
 
    @Override
-   public List<Item> consultarItemsDisponibles() throws ExcepcionServiciosAlquiler {
-        List<Item> disponibles = new ArrayList<Item>();
-        try{
-            disponibles= itemDAO.itemsDisponibles();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return disponibles;
+   public List<Item> consultarItemsDisponibles() throws ExcepcionServiciosAlquiler{
+       try {
+           return itemDAO.consultarDisponibles();
+       } catch (PersistenceException ex) {
+           throw new ExcepcionServiciosAlquiler("Error al consultar los items disponibles ",ex);
+       }
    }
 
    @Override
    public long consultarMultaAlquiler(int iditem, Date fechaDevolucion) throws ExcepcionServiciosAlquiler {
-       long multa = -1;
-       try {
-           //Implementar consulta SQL
-           multa = itemDAO.consultarMultaAlquiler(iditem,fechaDevolucion);
-       } catch (Exception e) {
-           throw new UnsupportedOperationException("Not supported yet.");
+       try{
+           ItemRentado item=itemRentadoDAO.consultarItemRentado(iditem);
+           LocalDate fechaMinimaEntrega=item.getFechafinrenta().toLocalDate();
+           LocalDate fechaEntrega=fechaDevolucion.toLocalDate();
+           long diasRetraso = ChronoUnit.DAYS.between(fechaMinimaEntrega, fechaEntrega);
+           if(diasRetraso<0){
+               diasRetraso=0;
+           }
+           return diasRetraso*MULTA_DIARIA;
+           
+       }catch (PersistenceException ex){
+           throw new ExcepcionServiciosAlquiler("Error al consultar la multa del item "+iditem,ex);
        }
-       return multa;
    }
 
    @Override
    public TipoItem consultarTipoItem(int id) throws ExcepcionServiciosAlquiler {
-       TipoItem tipoItem = null;
        try {
-           tipoItem = tipoItemDAO.consultarTipoItem(id);
-       } catch (Exception e) {
-           e.printStackTrace();
+           return tipoItemDAO.load(id);
+       } catch (PersistenceException ex) {
+           throw new ExcepcionServiciosAlquiler("Error al consultar el tipo item "+id,ex);
        }
-
-       return tipoItem;
    }
 
    @Override
    public List<TipoItem> consultarTiposItem() throws ExcepcionServiciosAlquiler {
-       List<TipoItem> tipoItems = new ArrayList<TipoItem>();
-       try {
-           tipoItems = tipoItemDAO.consultarTiposItems();
-           if(tipoItems.size() <=0)
-               System.out.println("La lista esta vacia");
-           
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-
-       return tipoItems;
+       throw new UnsupportedOperationException("Not supported yet.");
    }
+
 
    @Override
    public void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws ExcepcionServiciosAlquiler {
-       try {
-           ClienteDAO.registrarAlquilerCliente(date, docu, item, numdias);
-       } catch (Exception e) {
-           e.printStackTrace();
+       try{
+           clienteDAO.agregarItemRentadoACliente(docu,item.getId(),date,Date.valueOf(date.toLocalDate().plusDays(numdias)));
+       }catch(PersistenceException ex){
+            throw new ExcepcionServiciosAlquiler("Error al registrar item al cliente"+docu,ex);
+
        }
    }
 
    @Override
    public void registrarCliente(Cliente c) throws ExcepcionServiciosAlquiler {
        try {
-           ClienteDAO.registrarCliente(c);
-       } catch (Exception e) {
-           e.printStackTrace();
+           clienteDAO.save(c);
+       } catch (PersistenceException ex) {
+           throw new ExcepcionServiciosAlquiler("Error al registrar cliente",ex);
        }
    }
 
    @Override
    public long consultarCostoAlquiler(int iditem, int numdias) throws ExcepcionServiciosAlquiler {
-       long costo = -1;
-       try {
-           costo = itemDAO.consultarCostoAlquiler(iditem, numdias);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-
-       return costo;
+       try{
+           List<Item> itemsDisponibles = itemDAO.consultarDisponibles();
+           Item item = itemDAO.load(iditem);
+           boolean r=false;
+           for(Item i: itemsDisponibles){
+               if(i.getId()==iditem){
+                   r=true;
+               }
+           }
+           if(!r){
+               throw new ExcepcionServiciosAlquiler("Item "+iditem+ "no disponible");
+           }else{
+               return item.getTarifaxDia()*numdias;
+           }
+               
+        }catch(PersistenceException ex){
+            throw new ExcepcionServiciosAlquiler("Error al consultar costo del item "+iditem,ex);
+        }    
    }
 
    @Override
    public void actualizarTarifaItem(int id, long tarifa) throws ExcepcionServiciosAlquiler {
-       try {
-           itemDAO.actualizarTarifaItem(id, tarifa);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
+       throw new UnsupportedOperationException("Not supported yet.");
    }
-
    @Override
    public void registrarItem(Item i) throws ExcepcionServiciosAlquiler {
        try {
            itemDAO.save(i);
-       } catch (Exception e) {
-           e.printStackTrace();
+       } catch (PersistenceException ex) {
+           throw new ExcepcionServiciosAlquiler("Error al registrar el item ",ex);
        }
-    }
+   
+   }
 
    @Override
    public void vetarCliente(long docu, boolean estado) throws ExcepcionServiciosAlquiler {
-       try {
-           ClienteDAO.vetarCliente(docu, estado);
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
    }
 }

@@ -18,23 +18,16 @@ package edu.eci.cvds.samples.services.client;
 
 
 
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Date;
-
+import java.text.ParseException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-
-import edu.eci.cvds.sampleprj.dao.ClienteDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper;
-import edu.eci.cvds.samples.entities.Item;
-import edu.eci.cvds.samples.entities.TipoItem;
 
 /**
  *
@@ -67,32 +60,39 @@ public class MyBatisExample {
      * @param args
      * @throws SQLException 
      */
-    public static void main(String args[]) throws SQLException {
+    public static void main(String args[]) throws SQLException, ParseException {
         SqlSessionFactory sessionfact = getSqlSessionFactory();
 
-        try(SqlSession sqlss = sessionfact.openSession()) {
-            //Mappers
-            ClienteMapper clienteMapper = sqlss.getMapper(ClienteMapper.class);
-            ItemMapper itemMapper = sqlss.getMapper(ItemMapper.class);
-            TipoItemMapper tipoItemMapper = sqlss.getMapper(TipoItemMapper.class);
-            
-            //Pruebas Mapper Usuario OK
-            System.out.println(clienteMapper.consultarClientes()); //Bill Clinton
-            System.out.println(clienteMapper.consultarClienteById(98347)); //Bill Clinton
+        SqlSession sqlss = sessionfact.openSession();
+        
+        
+        //Crear el mapper y usarlo: 
+        ClienteMapper cm=sqlss.getMapper(ClienteMapper.class);
+        //cm...
 
-            //Pruebas Mapper Item OK
-            //System.out.println(itemMapper.consultarItem(2));
-            //System.out.println(itemMapper.consultarItems());
+        System.out.println(cm.consultarClientes());
+        System.out.println(cm.consultarCliente(1));
+        //cm.agregarItemRentadoACliente(21377885,4,new SimpleDateFormat("yyyy/MM/dd").parse("2020/03/13"),new SimpleDateFormat("yyyy/MM/dd").parse("2020/04/13"));
+        System.out.println(cm.consultarCliente(21377885));
+        
+        ItemMapper im = sqlss.getMapper(ItemMapper.class);
+        /*
+        TipoItem tip =new TipoItem(2137885, "tecnologia");
+        Item cel = new Item(tip,2137885,"Celular","Celular pro", new SimpleDateFormat("yyyy/MM/dd").parse("2020/03/13"),100,"credito", "sda");
+        im.insertarItem(cel);
+        */
+        System.out.println(im.consultarItems());
+        System.out.println(im.consultarItem(2137885));
+        
+        
+        sqlss.commit();
+       
+        sqlss.close();
+        
 
-            //Insertar tipo item NO Ok
-            //tipoItemMapper.addTipoItem("Jorgito Guayaco");
-            //TipoItem tipo = tipoItemMapper.getTipoItem(1);
-            //itemMapper.insertarItem(new Item(tipo, 2143369, "Jorgito", "Jorgito el guayaco", new Date(), 50000, "formatoRenta", "undefined"));
-            //clienteMapper.agregarItemRentadoACliente(98347, 2143369, new Date(), new Date());
-            //sqlss.commit();
-            sqlss.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        
     }
+
+
 }

@@ -7,7 +7,6 @@ import edu.eci.cvds.samples.entities.TipoItem;
 import edu.eci.cvds.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -26,7 +25,6 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
    private final Map<Integer,Item> itemsDisponibles;
    private final Map<Integer,ItemRentado> itemsrentados;
    private final Map<Integer,TipoItem> tipositems;
-
    private final Map<Integer,Long> mapaPrestamosPorIdCliente;
 
    public ServiciosAlquilerItemsStub() {
@@ -35,7 +33,7 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
        itemsrentados = new HashMap<>();
        tipositems = new HashMap<>();
        mapaPrestamosPorIdCliente=new HashMap<>();
-       //poblar();
+       poblar();
    }
 
    @Override
@@ -44,12 +42,16 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
    }
 
    @Override
-   public Cliente consultarCliente(long docu) throws ExcepcionServiciosAlquiler {
+   public Cliente consultarCliente(long docu) throws ExcepcionServiciosAlquiler{
        Cliente c=null;
-       if(clientes.containsKey(docu)){
+       if(clientes.containsKey(docu)){           
            c=clientes.get(docu);
+       }else{
+      
+           throw new ExcepcionServiciosAlquiler("El cliente con documento "+docu+" no esta registrado.");
        }
        return c;
+       
    }
 
    @Override
@@ -103,9 +105,9 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
 
    @Override
    public void actualizarTarifaItem(int id, long tarifa) throws ExcepcionServiciosAlquiler {
-       if (!itemsDisponibles.containsKey(id)) {
+       if (itemsDisponibles.containsKey(id)) {
            Item c = itemsDisponibles.get(id);
-           c.setTarifaxDia(tarifa);
+           System.out.println(c);
            itemsDisponibles.put(id, c);
        } else {
            throw new ExcepcionServiciosAlquiler("El item " + id + " no esta registrado.");
@@ -115,8 +117,10 @@ public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
    @Override
    public TipoItem consultarTipoItem(int id) throws ExcepcionServiciosAlquiler {
        TipoItem i = null;
-       if(!tipositems.containsKey(id)){
+       if(tipositems.containsKey(id)){
            i=tipositems.get(id);
+       }else{
+           throw new ExcepcionServiciosAlquiler("TipoItem no registrado:"+id);
        }
        return i;
 
