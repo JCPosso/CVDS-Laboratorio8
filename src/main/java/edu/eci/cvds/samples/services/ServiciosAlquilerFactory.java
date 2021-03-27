@@ -5,7 +5,7 @@ import edu.eci.cvds.sampleprj.dao.ClienteDAO;
 import edu.eci.cvds.sampleprj.dao.ItemDAO;
 import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISItemDAO;
+import edu.eci.cvds.sampleprj.dao.mybatis.*;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISTipoItemDAO;
 import org.mybatis.guice.XMLMyBatisModule;
 
@@ -29,7 +29,7 @@ public class ServiciosAlquilerFactory {
            protected void initialize() {
                setEnvironmentId(env);
                setClassPathResource(pathResource);
-               bind(ItemDAO.class).to(MyBATISItemDAO.class);
+               bind(ItemDAO.class).to(MyBATISItemDao.class);
                bind(ClienteDAO.class).to(MyBATISClienteDAO.class);
                bind(TipoItemDAO.class).to(MyBATISTipoItemDAO.class);
                bind(ItemRentadoDAO.class).to(MyBATISItemRentadoDAO.class);

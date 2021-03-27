@@ -12,7 +12,7 @@ import edu.eci.cvds.sampleprj.dao.ItemDAO;
 import edu.eci.cvds.sampleprj.dao.ItemRentadoDAO;
 import edu.eci.cvds.sampleprj.dao.TipoItemDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISClienteDAO;
-import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISItemDAO;
+import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISItemDao;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISItemRentadoDAO;
 import edu.eci.cvds.sampleprj.dao.mybatis.MyBATISTipoItemDAO;
 import edu.eci.cvds.samples.services.ServiciosAlquiler;
@@ -37,7 +37,7 @@ public class GuiceContextListener implements ServletContextListener {
                 setClassPathResource("mybatis-config.xml");
 
                 // TODO Add service class associated to Stub implementation
-                bind(ItemDAO.class).to(MyBATISItemDAO.class);
+                bind(ItemDAO.class).to(MyBATISItemDao.class);
                 bind(ClienteDAO.class).to(MyBATISClienteDAO.class);
                 bind(TipoItemDAO.class).to(MyBATISTipoItemDAO.class);
                 bind(ItemRentadoDAO.class).to(MyBATISItemRentadoDAO.class);
