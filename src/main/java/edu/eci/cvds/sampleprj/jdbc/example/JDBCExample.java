@@ -20,21 +20,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
-
 /**
  *
  * @author hcadavid
  */
 public class JDBCExample {
-
+    
     public static void main(String args[]){
         try {
             String url="jdbc:mysql://desarrollo.is.escuelaing.edu.co:3306/bdprueba";
@@ -45,11 +42,10 @@ public class JDBCExample {
             Class.forName(driver);
             Connection con=DriverManager.getConnection(url,user,pwd);
             con.setAutoCommit(false);
-
-            System.out.println("Conexion exitosa");
                  
+            
             System.out.println("Valor total pedido 1:"+valorTotalPedido(con, 1));
-
+            
             List<String> prodsPedido=nombresProductosPedido(con, 1);
             
             
@@ -60,9 +56,11 @@ public class JDBCExample {
             }
             System.out.println("-----------------------");
             
-            int suCodigoECI=2143369;
-            registrarNuevoProducto(con, suCodigoECI, "Johann Cepeda", 1000);   
-            con.commit(); 
+            
+            int suCodigoECI=2137885;
+            registrarNuevoProducto(con, suCodigoECI, "Gonzalez", 99999999);            
+            con.commit();
+                        
             
             con.close();
                                    
@@ -82,20 +80,19 @@ public class JDBCExample {
      * @throws SQLException 
      */
     public static void registrarNuevoProducto(Connection con, int codigo, String nombre,int precio) throws SQLException{
-        String createProduct = "INSERT INTO ORD_PRODUCTOS VALUES(?,?,?)";
         //Crear preparedStatement
-        try(PreparedStatement statement = con.prepareStatement(createProduct)) {
-            //Asignar parámetros
-            statement.setInt(1, codigo);
-            statement.setString(2, nombre);
-            statement.setInt(3, precio);
-            //usar 'execute'
-            statement.execute();
-            con.commit();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }        
+        //Asignar parámetros
+        //usar 'execute'
+        String sql =  "INSERT INTO ORD_PRODUCTOS (codigo, nombre, precio) VALUES (?,?,?)";
+        
+        PreparedStatement sentencia =con.prepareStatement(sql);
+        sentencia.setString(1,String.valueOf(codigo));
+        sentencia.setString(2,nombre);
+        sentencia.setString(3,String.valueOf(precio));
+        sentencia.execute();
+        
+        con.commit();
+        
     }
     
     /**
@@ -104,23 +101,31 @@ public class JDBCExample {
      * @param codigoPedido el código del pedido
      * @return 
      */
-    public static List<String> nombresProductosPedido(Connection con, int codigoPedido){
+    public static List<String> nombresProductosPedido(Connection con, int codigoPedido) throws SQLException{
         List<String> np=new LinkedList<>();
-        String query = "SELECT * from ORD_PRODUCTOS join ORD_DETALLE_PEDIDO ON (ORD_DETALLE_PEDIDO.pedido_fk = ORD_PRODUCTOS.codigo) WHERE ORD_PRODUCTOS.codigo = ?";
-        try (PreparedStatement nombresPedidos = con.prepareStatement(query)) {
-            nombresPedidos.setInt(1, codigoPedido);
-            ResultSet rs = nombresPedidos.executeQuery();
-
-            while(rs.next()){
-                String name = rs.getString("nombre");
-                np.add(name);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("El dato ya existe en la base de datos");
+        
+        //Crear prepared statement
+        //asignar parámetros
+        //usar executeQuery
+        //Sacar resultados del ResultSet
+        //Llenar la lista y retornarla
+        
+        String sql =  "SElECT nombre\n" +
+                        "FROM ORD_DETALLE_PEDIDO JOIN ORD_PRODUCTOS ON pedido_fk = codigo WHERE pedido_fk =?";
+        
+        PreparedStatement sentencia =con.prepareStatement(sql);
+        sentencia.setString(1,String.valueOf(codigoPedido));
+        ResultSet rs = sentencia.executeQuery();
+        
+        while(rs.next()){
+            np.add(rs.getString(1));
+            
         }
+        
+        
         return np;
     }
+
     
     /**
      * Calcular el costo total de un pedido
@@ -128,27 +133,19 @@ public class JDBCExample {
      * @param codigoPedido código del pedido cuyo total se calculará
      * @return el costo total del pedido (suma de: cantidades*precios)
      */
-    public static int valorTotalPedido(Connection con, int codigoPedido){
-        
-        int value = 0;
-        String query = "SELECT SUM(ORD_PRODUCTOS.precio * ORD_DETALLE_PEDIDO.cantidad) AS res FROM ORD_DETALLE_PEDIDO JOIN ORD_PRODUCTOS ON ORD_PRODUCTOS.codigo = ORD_DETALLE_PEDIDO.producto_fk WHERE ORD_DETALLE_PEDIDO.pedido_fk = ?";
+    public static int valorTotalPedido(Connection con, int codigoPedido) throws SQLException{
         
         //Crear prepared statement
-        try(PreparedStatement statement = con.prepareStatement(query)){
-            //asignar parámetros
-            statement.setInt(1, codigoPedido);
-            //usar executeQuery
-            ResultSet res = statement.executeQuery();
-            //Sacar resultado del ResultSet
-            while(res.next()){
-                value = res.getInt("res");
-            }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        return value;
+        //asignar parámetros
+        //usar executeQuery
+        //Sacar resultado del ResultSet
+        String sql = "SElECT SUM(cantidad*precio) FROM ORD_DETALLE_PEDIDO JOIN ORD_PRODUCTOS ON pedido_fk = codigo WHERE pedido_fk=?";
+        PreparedStatement sentencia =con.prepareStatement(sql);
+        sentencia.setString(1, String.valueOf(codigoPedido));
+        ResultSet rs = sentencia.executeQuery();
+        rs.next();
+        int res = rs.getInt(1);
+        return res;
     }
     
 

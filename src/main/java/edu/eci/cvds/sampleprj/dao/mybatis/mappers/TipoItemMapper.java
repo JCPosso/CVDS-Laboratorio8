@@ -10,9 +10,11 @@ public interface TipoItemMapper {
     
     
     public List<TipoItem> getTiposItems();
-    public List<TipoItem> consultarTipoItems();
-    public TipoItem getTipoItem(@Param("id") int id);
-    public void addTipoItem(@Param("des") String des);
-    public TipoItem consultarTipoItem(@Param("id") int id);
+    
+    public TipoItem getTipoItem(@Param("tiid")int id);
+    
+    public void addTipoItem(String des);
+    
+    public void insertarTipoItem(@Param("titem")TipoItem ti);
 
 }

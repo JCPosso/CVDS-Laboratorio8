@@ -5,18 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import edu.eci.cvds.samples.entities.Cliente;
-import edu.eci.cvds.samples.entities.Item;
-import edu.eci.cvds.samples.entities.ItemRentado;
 
 /**
  *
- * @author Juan Posso && Johann Cepeda
+ * @author 2106913
  */
 public interface ClienteMapper {
     
-    public Cliente consultarClienteById(@Param("idcli") int id); 
-    
-    public Cliente consultarClienteBydoc(@Param("doc") long documento);
+    public Cliente consultarCliente(@Param("idcli")int id); 
     
     /**
      * Registrar un nuevo item rentado asociado al cliente identificado
@@ -26,27 +22,18 @@ public interface ClienteMapper {
      * @param fechainicio
      * @param fechafin 
      */
-    public void agregarItemRentadoACliente(@Param("id") int id, 
-            @Param("idit") int idit, 
-            @Param("fechaInicio") Date fechainicio,
-            @Param("fechaFin") Date fechafin);
+    public void agregarItemRentadoACliente(@Param("idc")long id, 
+            @Param("idit")int idit, 
+            @Param("fechai")Date fechainicio,
+            @Param("fechaf")Date fechafin);
 
     /**
      * Consultar todos los clientes
      * @return 
      */
     public List<Cliente> consultarClientes();
-
-    public List<ItemRentado> consultarItems(@Param("id") long id);
-
-    public void registrarAlquilerCliente(
-        @Param("date")Date date, 
-        @Param("docu")long docu, 
-        @Param("item")Item item, 
-        @Param("numdias")int numdias
-    );    
-
-    public void registrarCliente(@Param("cliente") Cliente c);
-
-    public void vetarCliente(@Param("docu")long docu, @Param("estado")boolean estado);
+    
+    public void registrarCliente(@Param("cl")Cliente cl);
+    
+    
 }

@@ -4,74 +4,71 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper">
+    
+    <resultMap type='Item' id='ItemResult'>
+        <id property='id' column='id'/>
+        <result property='nombre' column='nombre'/>
+        <result property='descripcion' column='descripcion'/>
+        <result property='fechaLanzamiento' column='fechaLanzamiento'/>
+        <result property='tarifaxDia' column='tarifaxDia'/>
+        <result property='formatoRenta' column='formatoRenta'/>
+        <result property='genero' column='genero'/>
+        <association property="tipo" javaType="TipoItem" columnPrefix='ti_' resultMap="edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper.TipoItemResult"></association>
+    </resultMap>
+    <insert id="insertarItem" parameterType="map">
+        insert into VI_ITEMS (id,nombre,descripcion,fechalanzamiento,tarifaxdia,formatorenta,genero,TIPOITEM_id)
+        values (#{item.id},#{item.nombre},#{item.descripcion},#{item.fechaLanzamiento},#{item.tarifaxDia},#{item.formatoRenta},#{item.genero},#{item.tipo.id})
+    </insert>
+    <select parameterType="map" id="consultarItems" resultMap="ItemResult">
+        select 
+	i.id,
+	i.nombre,
+	i.descripcion,
+	i.fechalanzamiento,
+	i.tarifaxdia,
+	i.formatorenta,
+	i.genero,
 
-  <resultMap type='Item' id='ItemResult'>
-    <id property='id' column='id'/>
-    <result property='nombre' column='nombre'/>
-    <result property='descripcion' column='descripcion'/>
-    <result property='fechaLanzamiento' column='fechaLanzamiento'/>
-    <result property='tarifaxDia' column='tarifaxDia'/>
-    <result property='formatoRenta' column='formatoRenta'/>
-    <result property='genero' column='genero'/>
-    <association property="tipo" javaType="TipoItem"/>
-  </resultMap>
-  
-  <insert parameterType="map" id="insertarItem">
-    insert into VI_ITEMS values(
-        #{item.id}, 
-        #{item.nombre}, 
-        #{item.descripcion}, 
-        #{item.fechaLanzamiento},
-        #{item.tarifaxDia},
-        #{item.formatoRenta},
-        #{item.genero},
-        #{item.tipo.id}
-      )
-  </insert>
+	ti.id as ti_id,
+	ti.descripcion as ti_descripcion
+	
+	FROM VI_ITEMS as i
+	left join VI_TIPOITEM as ti on i.TIPOITEM_id = ti.id 
+    </select>
+    <select parameterType="map" id="consultarItem" resultMap="ItemResult">
+        select 
+	i.id,
+	i.nombre,
+	i.descripcion,
+	i.fechalanzamiento,
+	i.tarifaxdia,
+	i.formatorenta,
+	i.genero,
 
-  <select parameterType="map" id="consultarItem" resultMap="ItemResult">
-    select nombre, descripcion, fechalanzamiento from VI_ITEMS where id=#{id}
-  </select>
+	ti.id as ti_id,
+	ti.descripcion as ti_descripcion
+	
+	FROM VI_ITEMS as i
+	left join VI_TIPOITEM as ti on i.TIPOITEM_id = ti.id where i.id = #{itid}
+    </select>
+    <select parameterType="map" id="consultarDisponibles" resultMap="ItemResult">
+        
+        SELECT
+            r.id,
+            r.nombre,
+            r.descripcion,
+            r.fechalanzamiento,
+            r.tarifaxdia,
+            r.formatorenta,
+            r.genero,
+            ti.id as ti_id,
+            ti.descripcion as ti_descripcion
 
-  <select parameterType="map" id="consultarItems" resultMap="ItemResult">
-    select * from VI_ITEMS
-  </select>
-
-  <select parameterType="map" id="consultarItemsDisponibles" resultMap="ItemResult">
-    select 
-      ir.id,
-      ir.CLIENTES_documento,
-      ir.ITEMS_ID,
-      ir.fechainiciorenta,
-      ir.fechafinrenta,
-      i.id,
-      i.nombre,
-      i.descirpcion,
-      i.fechalanzamiento,
-      i.tarifaxdia,
-      i.formatorenta,
-      i.genero
-      FROM 
-      from VI_ITEMS AS i
-            JOIN  VI_ITEMRENTADO  AS ir 
-            ON i.id = ir.ITEMS_id 
-            WHERE SYSDATE() >  ir.fechafinrenta ;
-  </select>
-
-  <select parameterType="map" id="consultarMultaAlquiler" resultMap="ItemResult">
-    select tarifaxdia * #{dias} from VI_ITEMS where id = #{id}
-  </select>    
-
-  <select parameterType="map" id="consultarCostoAlquiler" resultMap="ItemResult">
-    select tarifaxdia * #{numdias} from VI_ITEMS where id = #{iditem}
-  </select>
-
-  <update parameterType="map" id="actualizarTarifaItem">
-    update VI_ITEMS set tarifaxdia = #{tarifa} where id = #{id}
-  </update>
-
-  <select parameterMap="map" id="valorMultaRetrasoxDia" resultMap="ItemResult">
-    select tarfiaxdia from VI_ITEMS where id = #{id}
-  </select>
-
+           FROM VI_ITEMS AS r
+           LEFT JOIN VI_TIPOITEM AS ti ON r.TIPOITEM_id=ti.id
+      	  LEFT JOIN VI_ITEMRENTADO AS b ON r.id=b.ITEMS_id
+      	  WHERE b.ITEMS_id IS null
+    </select>
+    
+    
 </mapper>
